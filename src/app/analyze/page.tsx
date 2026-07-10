@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useAuth } from "@clerk/nextjs";
 import { UploadZone } from "@/components/UploadZone";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
@@ -10,7 +11,6 @@ import { RiskGauge } from "@/components/RiskGauge";
 import { ClauseCard } from "@/components/ClauseCard";
 import { SummaryBox } from "@/components/SummaryBox";
 import { ELI18Toggle } from "@/components/ELI18Toggle";
-import { ExportActions } from "@/components/ExportButton";
 import { Modal } from "@/components/Modal";
 import { useToast } from "@/components/Toast";
 import type { ContractAnalysis } from "@/types/analysis";
@@ -20,6 +20,14 @@ import {
   readAnalysisSession,
   writeAnalysisSession,
 } from "@/lib/analysis-session";
+
+const ExportActions = dynamic(
+  () =>
+    import("@/components/ExportButton").then((mod) => ({
+      default: mod.ExportActions,
+    })),
+  { ssr: false }
+);
 
 export default function AnalyzePage() {
   const router = useRouter();

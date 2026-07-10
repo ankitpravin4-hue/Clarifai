@@ -1,9 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"],
+    serverComponentsExternalPackages: ["pdf-parse", "jspdf", "html2canvas"],
   },
-  webpack: (config, { dev }) => {
+  webpack: (config, { dev, isServer }) => {
+    if (isServer) {
+      config.externals = [
+        ...(Array.isArray(config.externals) ? config.externals : []),
+        "jspdf",
+        "html2canvas",
+      ];
+    }
     if (dev) {
       // Avoid stale/corrupt webpack cache causing 404s and infinite compiles.
       config.cache = false;
