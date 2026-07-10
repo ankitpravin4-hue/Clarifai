@@ -1,7 +1,21 @@
-// Suppress canvas polyfill warnings in serverless environments
+// Polyfills for serverless environment
+if (typeof globalThis.DOMMatrix === "undefined") {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).DOMMatrix = class DOMMatrix {
+    constructor() {}
+  };
+}
 if (typeof globalThis.Path2D === "undefined") {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  globalThis.Path2D = class Path2D {} as any;
+  (globalThis as any).Path2D = class Path2D {
+    constructor() {}
+  };
+}
+if (typeof globalThis.ImageData === "undefined") {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).ImageData = class ImageData {
+    constructor() {}
+  };
 }
 
 import type { ContractAnalysis } from "@/types/analysis";
