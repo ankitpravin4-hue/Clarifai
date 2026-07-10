@@ -1,23 +1,14 @@
 // Polyfills for serverless environment
 if (typeof globalThis.DOMMatrix === "undefined") {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).DOMMatrix = class DOMMatrix {
-    constructor() {}
-  };
+  (globalThis as any).DOMMatrix = class DOMMatrix {};
 }
 if (typeof globalThis.Path2D === "undefined") {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).Path2D = class Path2D {
-    constructor() {}
-  };
-}
-if (typeof globalThis.ImageData === "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).ImageData = class ImageData {
-    constructor() {}
-  };
+  (globalThis as any).Path2D = class Path2D {};
 }
 
+import pdfParse from "pdf-parse";
 import type { ContractAnalysis } from "@/types/analysis";
 
 const PDF_MAGIC = Buffer.from("%PDF");
@@ -26,37 +17,17 @@ export function isPdfBuffer(buf: Buffer): boolean {
   return buf.length >= 4 && buf.subarray(0, 4).equals(PDF_MAGIC);
 }
 
-export async function extractPdfText(buffer: Buffer): Promise<{
-  text: string;
-  pages: number;
-}> {
-  const pdfParseModule = await import("pdf-parse");
-  const modWithDefault = pdfParseModule as typeof pdfParseModule & {
-    default?: unknown;
+export async function extractTextFromPdf(
+  buffer: Buffer
+): Promise<{ text: string; pages: number }> {
+  const data = await pdfParse(buffer);
+  return {
+    text: (data.text || "").trim(),
+    pages: typeof data.numpages === "number" ? data.numpages : 1,
   };
-  const pdfParse = modWithDefault.default || pdfParseModule;
-
-  if (typeof pdfParse === "function") {
-    const data = await (
-      pdfParse as (buf: Buffer) => Promise<{ text?: string; numpages?: number }>
-    )(buffer);
-    const text = (data.text || "").trim();
-    const pages = typeof data.numpages === "number" ? data.numpages : 1;
-    return { text, pages };
-  }
-
-  const { PDFParse } = pdfParseModule;
-  const parser = new PDFParse({ data: buffer });
-  try {
-    const result = await parser.getText();
-    const text = (result.text || "").trim();
-    const pages =
-      typeof result.total === "number" && result.total > 0 ? result.total : 1;
-    return { text, pages };
-  } finally {
-    await parser.destroy();
-  }
 }
+
+export const extractPdfText = extractTextFromPdf;
 
 export function buildFallbackAnalysis(
   pages: number,
