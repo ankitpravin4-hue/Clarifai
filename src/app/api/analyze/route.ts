@@ -62,6 +62,8 @@ async function responseWithOptionalSave(
 }
 
 export async function POST(request: Request) {
+  console.log("=== ANALYZE ROUTE CALLED ===");
+
   try {
     const contentType = request.headers.get("content-type") || "";
     if (!contentType.includes("multipart/form-data")) {
@@ -136,9 +138,8 @@ export async function POST(request: Request) {
         "X-LexScan-Warning": encodeURIComponent(message.slice(0, 800)),
       });
     }
-  } catch (e) {
-    const message =
-      e instanceof Error ? e.message : "Unexpected error processing upload.";
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch (error) {
+    console.error("=== ANALYZE ERROR ===", error);
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
