@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { jsPDF } from "jspdf";
+import type { jsPDF } from "jspdf";
 import { useToast } from "@/components/Toast";
 import type { ClauseItem, ContractAnalysis } from "@/types/analysis";
 import { isContractAnalysis } from "@/types/analysis";
@@ -102,11 +102,12 @@ function buildPlainLetter(
   return lines.join("\n");
 }
 
-function buildNegotiationPdf(
+async function buildNegotiationPdf(
   letter: NegotiationLetter,
   form: NegotiateFormData,
   dateStr: string
-): jsPDF {
+): Promise<jsPDF> {
+  const { jsPDF } = await import("jspdf");
   const margin = 25;
   const pageH = 297;
   const pageW = 210;
@@ -315,10 +316,10 @@ export default function NegotiatePage() {
     }
   };
 
-  const downloadPdf = () => {
+  const downloadPdf = async () => {
     if (!letter) return;
     const safeRef = form.contractRef.replace(/[^a-zA-Z0-9-_]/g, "_");
-    const doc = buildNegotiationPdf(letter, form, letterDate);
+    const doc = await buildNegotiationPdf(letter, form, letterDate);
     doc.save(`negotiation_letter_${safeRef}.pdf`);
     showToast("PDF downloaded.", "success");
   };

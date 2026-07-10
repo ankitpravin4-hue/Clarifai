@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { jsPDF } from "jspdf";
+import type { jsPDF } from "jspdf";
 import { isContractAnalysis } from "@/types/analysis";
 
 export const runtime = "nodejs";
@@ -28,6 +28,7 @@ export async function POST(request: Request) {
       );
     }
 
+    const { jsPDF } = await import("jspdf");
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     const margin = 48;
     const pageWidth = doc.internal.pageSize.getWidth();

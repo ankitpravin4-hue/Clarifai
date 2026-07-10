@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { jsPDF } from "jspdf";
 import type { ContractAnalysis } from "@/types/analysis";
 import { useToast } from "@/components/Toast";
 
 async function captureToPdf(el: HTMLElement) {
   const html2canvas = (await import("html2canvas")).default;
+  const { jsPDF } = await import("jspdf");
   const canvas = await html2canvas(el, {
     scale: 2,
     useCORS: true,
