@@ -5,6 +5,8 @@ import type { ContractAnalysis } from "@/types/analysis";
 import { useToast } from "@/components/Toast";
 
 async function captureToPdf(el: HTMLElement) {
+  if (typeof window === "undefined") return;
+
   const html2canvas = (await import("html2canvas")).default;
   const { jsPDF } = await import("jspdf");
   const canvas = await html2canvas(el, {
@@ -47,6 +49,8 @@ export function ExportActions({
   const [busy, setBusy] = useState(false);
 
   const exportPdf = useCallback(async () => {
+    if (typeof window === "undefined") return;
+
     setBusy(true);
     try {
       const res = await fetch("/api/export", {

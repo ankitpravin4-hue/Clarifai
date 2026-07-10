@@ -106,7 +106,9 @@ async function buildNegotiationPdf(
   letter: NegotiationLetter,
   form: NegotiateFormData,
   dateStr: string
-): Promise<jsPDF> {
+): Promise<jsPDF | undefined> {
+  if (typeof window === "undefined") return;
+
   const { jsPDF } = await import("jspdf");
   const margin = 25;
   const pageH = 297;
@@ -317,9 +319,11 @@ export default function NegotiatePage() {
   };
 
   const downloadPdf = async () => {
+    if (typeof window === "undefined") return;
     if (!letter) return;
     const safeRef = form.contractRef.replace(/[^a-zA-Z0-9-_]/g, "_");
     const doc = await buildNegotiationPdf(letter, form, letterDate);
+    if (!doc) return;
     doc.save(`negotiation_letter_${safeRef}.pdf`);
     showToast("PDF downloaded.", "success");
   };
