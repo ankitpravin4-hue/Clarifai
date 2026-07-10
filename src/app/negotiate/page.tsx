@@ -14,7 +14,7 @@ const NegotiatePdfButton = dynamic(
     import("@/components/NegotiatePdfButton").then((mod) => ({
       default: mod.NegotiatePdfButton,
     })),
-  { ssr: false }
+  { ssr: false, loading: () => null }
 );
 
 const CONTRACT_TYPES = [

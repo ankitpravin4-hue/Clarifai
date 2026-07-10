@@ -26,7 +26,7 @@ const ExportActions = dynamic(
     import("@/components/ExportButton").then((mod) => ({
       default: mod.ExportActions,
     })),
-  { ssr: false }
+  { ssr: false, loading: () => null }
 );
 
 export default function AnalyzePage() {
