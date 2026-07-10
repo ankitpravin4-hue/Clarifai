@@ -1,3 +1,9 @@
+// Suppress canvas polyfill warnings in serverless environments
+if (typeof globalThis.Path2D === "undefined") {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  globalThis.Path2D = class Path2D {} as any;
+}
+
 import type { ContractAnalysis } from "@/types/analysis";
 
 const PDF_MAGIC = Buffer.from("%PDF");

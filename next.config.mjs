@@ -1,10 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"],
+    serverComponentsExternalPackages: ["pdf-parse", "canvas"],
   },
   webpack: (config, { dev, isServer }) => {
     if (isServer) {
+      config.externals = [
+        ...(Array.isArray(config.externals) ? config.externals : []),
+        "canvas",
+        "jspdf",
+        "html2canvas",
+      ];
       config.resolve.alias = {
         ...config.resolve.alias,
         jspdf: false,
