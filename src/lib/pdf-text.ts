@@ -23,28 +23,16 @@ export function isPdfBuffer(buf: Buffer): boolean {
   return buf.length >= 4 && buf.subarray(0, 4).equals(PDF_MAGIC);
 }
 
-async function loadPdfParse(): Promise<
-  (buffer: Buffer) => Promise<{ text?: string; numpages?: number }>
-> {
-  const mod = await import("pdf-parse");
-  const pdfParse =
-    (mod as { default?: (buffer: Buffer) => Promise<{ text?: string; numpages?: number }> })
-      .default ?? mod;
-  if (typeof pdfParse !== "function") {
-    throw new PdfParseError("PDF parser failed to load.");
-  }
-  return pdfParse;
-}
-
 export async function extractTextFromPdf(
   buffer: Buffer
 ): Promise<{ text: string; pages: number }> {
   try {
-    const pdfParse = await loadPdfParse();
-    const data = await pdfParse(buffer);
+    const { extractText, getDocumentProxy } = await import("unpdf");
+    const pdf = await getDocumentProxy(new Uint8Array(buffer));
+    const { totalPages, text } = await extractText(pdf, { mergePages: true });
     return {
-      text: (data.text || "").trim(),
-      pages: typeof data.numpages === "number" ? data.numpages : 1,
+      text: (text || "").trim(),
+      pages: typeof totalPages === "number" && totalPages > 0 ? totalPages : 1,
     };
   } catch (err) {
     const detail =

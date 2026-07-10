@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse", "canvas"],
+    serverComponentsExternalPackages: ["unpdf", "canvas"],
   },
   webpack: (config, { dev, isServer }) => {
     if (isServer) {
       config.externals = [
         ...(Array.isArray(config.externals) ? config.externals : []),
         "canvas",
-        "pdf-parse",
+        "unpdf",
         "jspdf",
         "html2canvas",
       ];
