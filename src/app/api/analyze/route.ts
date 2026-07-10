@@ -4,6 +4,7 @@ import {
   extractPdfText,
   isPdfBuffer,
   buildFallbackAnalysis,
+  PdfParseError,
 } from "@/lib/pdf-text";
 import { analyzeContractText } from "@/lib/openrouter";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -106,6 +107,12 @@ export async function POST(request: Request) {
     }
 
     const arrayBuffer = await file.arrayBuffer();
+    if (arrayBuffer.byteLength !== file.size) {
+      return NextResponse.json(
+        { error: "Upload was incomplete. Please try again." },
+        { status: 422 }
+      );
+    }
     const buffer = Buffer.from(arrayBuffer);
 
     if (!isPdfBuffer(buffer)) {
@@ -115,7 +122,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const { text, pages } = await extractPdfText(buffer);
+    let text: string;
+    let pages: number;
+    try {
+      ({ text, pages } = await extractPdfText(buffer));
+    } catch (err) {
+      if (err instanceof PdfParseError) {
+        return NextResponse.json({ error: err.message }, { status: 422 });
+      }
+      throw err;
+    }
 
     if (!text || text.length < 40) {
       return NextResponse.json(

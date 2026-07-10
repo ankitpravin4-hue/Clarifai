@@ -8,23 +8,56 @@ if (typeof globalThis.Path2D === "undefined") {
   (globalThis as any).Path2D = class Path2D {};
 }
 
-import pdfParse from "pdf-parse";
 import type { ContractAnalysis } from "@/types/analysis";
 
 const PDF_MAGIC = Buffer.from("%PDF");
+
+export class PdfParseError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PdfParseError";
+  }
+}
 
 export function isPdfBuffer(buf: Buffer): boolean {
   return buf.length >= 4 && buf.subarray(0, 4).equals(PDF_MAGIC);
 }
 
+async function loadPdfParse(): Promise<
+  (buffer: Buffer) => Promise<{ text?: string; numpages?: number }>
+> {
+  const mod = await import("pdf-parse");
+  const pdfParse =
+    (mod as { default?: (buffer: Buffer) => Promise<{ text?: string; numpages?: number }> })
+      .default ?? mod;
+  if (typeof pdfParse !== "function") {
+    throw new PdfParseError("PDF parser failed to load.");
+  }
+  return pdfParse;
+}
+
 export async function extractTextFromPdf(
   buffer: Buffer
 ): Promise<{ text: string; pages: number }> {
-  const data = await pdfParse(buffer);
-  return {
-    text: (data.text || "").trim(),
-    pages: typeof data.numpages === "number" ? data.numpages : 1,
-  };
+  try {
+    const pdfParse = await loadPdfParse();
+    const data = await pdfParse(buffer);
+    return {
+      text: (data.text || "").trim(),
+      pages: typeof data.numpages === "number" ? data.numpages : 1,
+    };
+  } catch (err) {
+    const detail =
+      err instanceof Error
+        ? err.message
+        : typeof err === "string"
+          ? err
+          : "Unknown PDF parse error";
+    console.error("PDF parse failed:", detail, err);
+    throw new PdfParseError(
+      "Could not read this PDF. It may be corrupted, encrypted, or use an unsupported format. Try re-exporting it as a standard PDF."
+    );
+  }
 }
 
 export const extractPdfText = extractTextFromPdf;
@@ -56,7 +89,7 @@ export function buildFallbackAnalysis(
       },
     ],
     negotiationTips: [
-      "Retry the scan after confirming your OPENROUTER_API_KEY is valid.",
+      "Retry the scan after confirming your GROQ_API_KEY is valid.",
       "Try a smaller PDF or fewer pages if timeouts persist.",
       "Consult a licensed attorney for binding advice.",
     ],

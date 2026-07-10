@@ -3,6 +3,7 @@ import {
   extractPdfText,
   isPdfBuffer,
   buildFallbackAnalysis,
+  PdfParseError,
 } from "@/lib/pdf-text";
 import { analyzeContractText } from "@/lib/openrouter";
 import type { ContractAnalysis } from "@/types/analysis";
@@ -29,7 +30,12 @@ async function analyzeFile(file: File): Promise<ContractAnalysis> {
     throw new Error("Invalid PDF upload.");
   }
 
-  const { text, pages } = await extractPdfText(buffer);
+  const { text, pages } = await extractPdfText(buffer).catch((err) => {
+    if (err instanceof PdfParseError) throw err;
+    throw new PdfParseError(
+      "Could not read one of the PDFs. Re-export both files as standard PDFs and try again."
+    );
+  });
   if (!text || text.length < 40) {
     throw new Error("Could not extract enough text from a PDF.");
   }

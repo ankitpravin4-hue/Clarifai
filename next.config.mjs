@@ -8,6 +8,7 @@ const nextConfig = {
       config.externals = [
         ...(Array.isArray(config.externals) ? config.externals : []),
         "canvas",
+        "pdf-parse",
         "jspdf",
         "html2canvas",
       ];
