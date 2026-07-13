@@ -83,7 +83,7 @@ export function CompareView({
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 hidden overflow-x-auto lg:block">
           <table className="min-w-full border-separate border-spacing-y-2 text-left text-sm">
             <thead>
               <tr className="text-xs uppercase tracking-wide text-slate-500">
@@ -149,6 +149,47 @@ export function CompareView({
               })}
             </tbody>
           </table>
+        </div>
+
+        <div className="mt-4 space-y-4 lg:hidden">
+          {Array.from({ length: maxRows }).map((_, idx) => {
+            const lc = left.clauses[idx];
+            const rc = right.clauses[idx];
+            return (
+              <div
+                key={idx}
+                className="space-y-3 rounded-lg border border-line bg-slate-50/80 p-4"
+              >
+                <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                  Clause {idx + 1}
+                </p>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">{leftTitle}</p>
+                  <p className="mt-1 text-sm font-semibold text-navy">
+                    {lc?.name ?? "—"}
+                  </p>
+                  {lc && (
+                    <p className="mt-1 text-xs text-slate-600">
+                      {lc.riskLevel} · {lc.explanation.slice(0, 120)}
+                      {lc.explanation.length > 120 ? "…" : ""}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500">{rightTitle}</p>
+                  <p className="mt-1 text-sm font-semibold text-navy">
+                    {rc?.name ?? "—"}
+                  </p>
+                  {rc && (
+                    <p className="mt-1 text-xs text-slate-600">
+                      {rc.riskLevel} · {rc.explanation.slice(0, 120)}
+                      {rc.explanation.length > 120 ? "…" : ""}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 

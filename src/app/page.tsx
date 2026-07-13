@@ -47,7 +47,7 @@ const features = [
 
 export default function Home() {
   return (
-    <main className="bg-navy text-white">
+    <div className="bg-navy text-white">
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(24,95,165,0.45),_transparent_55%)]" />
         <div className="pointer-events-none absolute -left-24 top-32 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
@@ -84,20 +84,20 @@ export default function Home() {
                 Compare two contracts
               </Link>
             </div>
-            <dl className="grid max-w-lg grid-cols-3 gap-4 border-t border-white/10 pt-6 text-sm text-slate-200">
-              <div>
+            <dl className="flex max-w-lg flex-wrap gap-x-8 gap-y-4 border-t border-white/10 pt-6 text-sm text-slate-200">
+              <div className="min-w-[6.5rem]">
                 <dt className="text-xs uppercase tracking-wide text-slate-400">
                   Model
                 </dt>
                 <dd className="mt-1 font-semibold text-white">AI</dd>
               </div>
-              <div>
+              <div className="min-w-[6.5rem]">
                 <dt className="text-xs uppercase tracking-wide text-slate-400">
                   Files
                 </dt>
                 <dd className="mt-1 font-semibold text-white">PDF · DOCX UI*</dd>
               </div>
-              <div>
+              <div className="min-w-[6.5rem]">
                 <dt className="text-xs uppercase tracking-wide text-slate-400">
                   Security
                 </dt>
@@ -180,11 +180,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-white/10 bg-slate-950 py-10 text-center text-xs text-slate-500">
-        Clarifai is a demo experience — always involve qualified counsel before
-        you sign.
-      </footer>
-    </main>
+    </div>
   );
 }

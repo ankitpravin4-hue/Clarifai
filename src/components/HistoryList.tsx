@@ -126,7 +126,7 @@ export function HistoryList({ analyses }: { analyses: StoredAnalysis[] }) {
                   writeAnalysisSession(toContractAnalysis(row));
                   router.push("/analyze?view=history");
                 }}
-                className="inline-flex shrink-0 items-center justify-center rounded-lg border border-accent/30 bg-accent/5 px-4 py-2.5 text-sm font-semibold text-accent shadow-sm transition hover:bg-accent/10"
+                className="inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-accent/30 bg-accent/5 px-4 py-2.5 text-sm font-semibold text-accent shadow-sm transition hover:bg-accent/10 sm:w-auto"
               >
                 View full analysis
               </button>

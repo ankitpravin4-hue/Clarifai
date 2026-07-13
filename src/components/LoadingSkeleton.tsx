@@ -5,7 +5,7 @@ export function LoadingSkeleton() {
         <div className="h-4 w-48 animate-shimmer rounded-full bg-slate-200" />
         <p className="text-sm font-medium text-slate-600">Analyzing contract…</p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
