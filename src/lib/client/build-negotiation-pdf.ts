@@ -82,10 +82,46 @@ export async function buildNegotiationPdf(
     }
   };
 
+  // Diamond stamp logo (gold tone)
+  const cx = pageW / 2;
+  doc.setDrawColor(201, 150, 60);
+  doc.setLineWidth(0.6);
+  doc.line(cx, 7, cx + 28, 35);
+  doc.line(cx + 28, 35, cx, 63);
+  doc.line(cx, 63, cx - 28, 35);
+  doc.line(cx - 28, 35, cx, 7);
+
+  doc.setLineWidth(0.4);
+  doc.line(cx, 9, cx + 26, 35);
+  doc.line(cx + 26, 35, cx, 61);
+  doc.line(cx, 61, cx - 26, 35);
+  doc.line(cx - 26, 35, cx, 9);
+
+  doc.setTextColor(201, 150, 60);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6);
+  doc.text("CLARIFAI", cx, 22, { align: "center", charSpace: 1.2 });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.text("C", cx, 42, { align: "center" });
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(5);
+  doc.text("AI LEGAL ANALYSIS", cx, 52, { align: "center", charSpace: 0.4 });
+
+  doc.setDrawColor(201, 150, 60);
+  doc.setLineWidth(0.2);
+  doc.line(cx - 15, 49, cx + 15, 49);
+  doc.line(cx - 15, 50.5, cx + 15, 50.5);
+
+  doc.setTextColor(212, 169, 106);
+  doc.setFontSize(4.5);
+  doc.text("WITHOUT PREJUDICE", cx, 57, { align: "center", charSpace: 0.3 });
+
+  doc.setTextColor(15, 23, 42);
   doc.setFont("times", "normal");
-  doc.setFontSize(9);
-  doc.text("WITHOUT PREJUDICE", pageW / 2, y, { align: "center" });
-  y += 10;
+  y = 75;
 
   const blockTop = y;
   doc.setFontSize(10);
