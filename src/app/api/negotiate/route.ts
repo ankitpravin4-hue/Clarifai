@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import type { ClauseItem } from "@/types/analysis";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -90,6 +92,22 @@ export async function POST(request: Request) {
   console.log("=== NEGOTIATE ROUTE CALLED ===");
 
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please sign in." },
+        { status: 401 }
+      );
+    }
+
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    if (!checkRateLimit(ip, 5, 60000)) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Try again in a minute." },
+        { status: 429 }
+      );
+    }
+
     if (!GROQ_API_KEY) {
       return NextResponse.json(
         { error: "GROQ_API_KEY is not configured on the server." },

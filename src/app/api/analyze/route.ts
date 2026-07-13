@@ -8,6 +8,7 @@ import {
 } from "@/lib/pdf-text";
 import { analyzeContractText } from "@/lib/openrouter";
 import { supabaseAdmin } from "@/lib/supabase";
+import { checkRateLimit } from "@/lib/rate-limit";
 import type { ContractAnalysis } from "@/types/analysis";
 
 export const runtime = "nodejs";
@@ -45,9 +46,9 @@ async function saveAnalysisToSupabase(
 async function responseWithOptionalSave(
   analysis: ContractAnalysis,
   fileName: string,
+  userId: string,
   extraHeaders?: Record<string, string>
 ) {
-  const { userId } = await auth();
   let saved = false;
 
   if (userId) {
@@ -66,6 +67,22 @@ export async function POST(request: Request) {
   console.log("=== ANALYZE ROUTE CALLED ===");
 
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please sign in." },
+        { status: 401 }
+      );
+    }
+
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    if (!checkRateLimit(ip, 5, 60000)) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Try again in a minute." },
+        { status: 429 }
+      );
+    }
+
     const contentType = request.headers.get("content-type") || "";
     if (!contentType.includes("multipart/form-data")) {
       return NextResponse.json(
@@ -83,37 +100,27 @@ export async function POST(request: Request) {
 
     if (file.size > MAX_BYTES) {
       return NextResponse.json(
-        { error: "File exceeds 20MB limit." },
-        { status: 413 }
+        { error: "File too large. Maximum size is 20MB." },
+        { status: 400 }
       );
     }
 
-    const name = file.name?.toLowerCase() || "";
-    if (name.endsWith(".docx")) {
+    if (file.type !== "application/pdf") {
       return NextResponse.json(
-        {
-          error:
-            "DOCX is not supported yet. Please export or print to PDF and try again.",
-        },
-        { status: 415 }
-      );
-    }
-
-    if (!name.endsWith(".pdf") && file.type !== "application/pdf") {
-      return NextResponse.json(
-        { error: "Only PDF files are supported for analysis." },
+        { error: "Invalid file type. Only PDF files are supported." },
         { status: 415 }
       );
     }
 
     const arrayBuffer = await file.arrayBuffer();
-    if (arrayBuffer.byteLength !== file.size) {
+    const buffer = Buffer.from(arrayBuffer);
+
+    if (buffer.length === 0) {
       return NextResponse.json(
-        { error: "Upload was incomplete. Please try again." },
-        { status: 422 }
+        { error: "File is empty." },
+        { status: 400 }
       );
     }
-    const buffer = Buffer.from(arrayBuffer);
 
     if (!isPdfBuffer(buffer)) {
       return NextResponse.json(
@@ -145,12 +152,12 @@ export async function POST(request: Request) {
 
     try {
       const analysis = await analyzeContractText(text, pages);
-      return responseWithOptionalSave(analysis, file.name);
+      return responseWithOptionalSave(analysis, file.name, userId);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Analysis failed unexpectedly.";
       const fallback = buildFallbackAnalysis(pages, text);
-      return responseWithOptionalSave(fallback, file.name, {
+      return responseWithOptionalSave(fallback, file.name, userId, {
         "X-LexScan-Warning": encodeURIComponent(message.slice(0, 800)),
       });
     }

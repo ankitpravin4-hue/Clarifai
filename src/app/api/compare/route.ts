@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import {
   extractPdfText,
   isPdfBuffer,
@@ -13,18 +14,31 @@ export const maxDuration = 120;
 
 const MAX_BYTES = 20 * 1024 * 1024;
 
-async function analyzeFile(file: File): Promise<ContractAnalysis> {
+function validatePdfFile(file: File): NextResponse | null {
   if (file.size > MAX_BYTES) {
-    throw new Error("One of the files exceeds 20MB.");
+    return NextResponse.json(
+      { error: "File too large. Maximum size is 20MB." },
+      { status: 400 }
+    );
   }
 
-  const name = file.name?.toLowerCase() || "";
-  if (name.endsWith(".docx")) {
-    throw new Error("DOCX is not supported. Use PDF for both contracts.");
+  if (file.type !== "application/pdf") {
+    return NextResponse.json(
+      { error: "Invalid file type. Only PDF files are supported." },
+      { status: 415 }
+    );
   }
 
+  return null;
+}
+
+async function analyzeFile(file: File): Promise<ContractAnalysis> {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
+
+  if (buffer.length === 0) {
+    throw new Error("File is empty.");
+  }
 
   if (!isPdfBuffer(buffer)) {
     throw new Error("Invalid PDF upload.");
@@ -49,6 +63,14 @@ async function analyzeFile(file: File): Promise<ContractAnalysis> {
 
 export async function POST(request: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please sign in." },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const a = formData.get("contract1");
     const b = formData.get("contract2");
@@ -59,6 +81,11 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    const invalidA = validatePdfFile(a);
+    if (invalidA) return invalidA;
+    const invalidB = validatePdfFile(b);
+    if (invalidB) return invalidB;
 
     const [contract1, contract2] = await Promise.all([
       analyzeFile(a),
