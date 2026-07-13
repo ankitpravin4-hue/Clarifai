@@ -99,9 +99,9 @@ export default function Home() {
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-wide text-slate-400">
-                  Footprint
+                  Security
                 </dt>
-                <dd className="mt-1 font-semibold text-white">No auth · no DB</dd>
+                <dd className="mt-1 font-semibold text-white">Secure · Private</dd>
               </div>
             </dl>
             <p className="text-[11px] text-slate-400">

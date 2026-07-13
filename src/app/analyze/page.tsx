@@ -235,8 +235,7 @@ export default function AnalyzePage() {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-slate-500">
-              PDF required for analysis · DOCX accepted in UI but must be converted to
-              PDF server-side.
+              Supports PDF files up to 20MB · Your documents are never stored
             </p>
             <button
               type="button"
