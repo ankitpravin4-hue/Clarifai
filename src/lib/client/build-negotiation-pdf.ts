@@ -104,19 +104,22 @@ export async function buildNegotiationPdf(
   doc.line(cx, bottom - inset, cx - size + inset, midY);
   doc.line(cx - size + inset, midY, cx, logoY + inset);
 
-  // C monogram — centered inside diamond (baseline ~mid)
+  // C monogram — optically centered in diamond
   doc.setFont("times", "bold");
-  doc.setFontSize(12);
+  doc.setFontSize(13);
   doc.setTextColor(201, 150, 60);
-  doc.text("C", cx, midY + 3.2, { align: "center" });
+  const cWidth = doc.getTextWidth("C");
+  doc.text("C", cx - cWidth / 2, midY + 2.1);
 
-  // Labels below the diamond (no overlap)
+  // CLARIFAI + dividers (manually centered; setCharSpace breaks align:"center")
   const labelY = bottom + 4.5;
   doc.setFont("times", "normal");
   doc.setFontSize(5);
   doc.setTextColor(180, 130, 50);
   doc.setCharSpace(1.2);
-  doc.text("CLARIFAI", cx, labelY, { align: "center" });
+  const brand = "CLARIFAI";
+  const brandWidth = doc.getTextWidth(brand);
+  doc.text(brand, cx - brandWidth / 2, labelY);
   doc.setCharSpace(0);
 
   doc.setDrawColor(201, 150, 60);
@@ -124,17 +127,11 @@ export async function buildNegotiationPdf(
   doc.line(cx - 8, labelY + 1.4, cx + 8, labelY + 1.4);
   doc.line(cx - 8, labelY + 2.2, cx + 8, labelY + 2.2);
 
-  doc.setFontSize(4);
-  doc.setTextColor(180, 130, 50);
-  doc.setCharSpace(0.6);
-  doc.text("WITHOUT PREJUDICE", cx, labelY + 5, { align: "center" });
-  doc.setCharSpace(0);
-
   doc.setTextColor(0, 0, 0);
   doc.setDrawColor(0, 0, 0);
   doc.setFont("times", "normal");
 
-  y = labelY + 12;
+  y = labelY + 8;
 
   const blockTop = y;
   doc.setFontSize(10);
