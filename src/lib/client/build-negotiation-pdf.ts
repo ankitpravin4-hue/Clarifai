@@ -82,46 +82,76 @@ export async function buildNegotiationPdf(
     }
   };
 
-  // Diamond stamp logo (gold tone)
   const cx = pageW / 2;
+  const logoY = 18;
+  const size = 10;
+
+  // Outer diamond
   doc.setDrawColor(201, 150, 60);
-  doc.setLineWidth(0.6);
-  doc.line(cx, 7, cx + 28, 35);
-  doc.line(cx + 28, 35, cx, 63);
-  doc.line(cx, 63, cx - 28, 35);
-  doc.line(cx - 28, 35, cx, 7);
-
   doc.setLineWidth(0.4);
-  doc.line(cx, 9, cx + 26, 35);
-  doc.line(cx + 26, 35, cx, 61);
-  doc.line(cx, 61, cx - 26, 35);
-  doc.line(cx - 26, 35, cx, 9);
+  doc.lines(
+    [
+      [size, size],
+      [size, -size],
+      [-size, -size],
+      [-size, size],
+    ],
+    cx,
+    logoY + size,
+    [1, 1],
+    null,
+    true
+  );
 
+  // Inner diamond (smaller)
+  const s2 = size - 2;
+  doc.setLineWidth(0.2);
+  doc.lines(
+    [
+      [s2, s2],
+      [s2, -s2],
+      [-s2, -s2],
+      [-s2, s2],
+    ],
+    cx,
+    logoY + size,
+    [1, 1],
+    null,
+    true
+  );
+
+  // C monogram
+  doc.setFont("times", "bold");
+  doc.setFontSize(11);
   doc.setTextColor(201, 150, 60);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(6);
-  doc.text("CLARIFAI", cx, 22, { align: "center", charSpace: 1.2 });
+  doc.text("C", cx, logoY + size + 2, { align: "center" });
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(22);
-  doc.text("C", cx, 42, { align: "center" });
-
-  doc.setFont("helvetica", "normal");
+  // CLARIFAI text below C
+  doc.setFont("times", "normal");
   doc.setFontSize(5);
-  doc.text("AI LEGAL ANALYSIS", cx, 52, { align: "center", charSpace: 0.4 });
+  doc.setTextColor(180, 130, 50);
+  doc.setCharSpace(2);
+  doc.text("CLARIFAI", cx, logoY + size + 6, { align: "center" });
+  doc.setCharSpace(0);
 
+  // Two thin lines
   doc.setDrawColor(201, 150, 60);
   doc.setLineWidth(0.2);
-  doc.line(cx - 15, 49, cx + 15, 49);
-  doc.line(cx - 15, 50.5, cx + 15, 50.5);
+  doc.line(cx - 8, logoY + size + 7.5, cx + 8, logoY + size + 7.5);
+  doc.line(cx - 8, logoY + size + 8.5, cx + 8, logoY + size + 8.5);
 
-  doc.setTextColor(212, 169, 106);
-  doc.setFontSize(4.5);
-  doc.text("WITHOUT PREJUDICE", cx, 57, { align: "center", charSpace: 0.3 });
+  // WITHOUT PREJUDICE tiny text
+  doc.setFontSize(4);
+  doc.setTextColor(180, 130, 50);
+  doc.setCharSpace(1);
+  doc.text("WITHOUT PREJUDICE", cx, logoY + size + 11, { align: "center" });
+  doc.setCharSpace(0);
 
-  doc.setTextColor(15, 23, 42);
-  doc.setFont("times", "normal");
-  y = 75;
+  // Reset colors for rest of letter
+  doc.setTextColor(0, 0, 0);
+  doc.setDrawColor(0, 0, 0);
+
+  y = logoY + size * 2 + 20;
 
   const blockTop = y;
   doc.setFontSize(10);
