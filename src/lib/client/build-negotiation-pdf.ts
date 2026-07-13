@@ -83,75 +83,58 @@ export async function buildNegotiationPdf(
   };
 
   const cx = pageW / 2;
-  const logoY = 18;
-  const size = 10;
+  const logoY = 12;
+  const size = 11;
+  const midY = logoY + size;
+  const bottom = logoY + size * 2;
 
-  // Outer diamond
+  // Outer diamond (top → right → bottom → left)
   doc.setDrawColor(201, 150, 60);
-  doc.setLineWidth(0.4);
-  doc.lines(
-    [
-      [size, size],
-      [size, -size],
-      [-size, -size],
-      [-size, size],
-    ],
-    cx,
-    logoY + size,
-    [1, 1],
-    null,
-    true
-  );
+  doc.setLineWidth(0.45);
+  doc.line(cx, logoY, cx + size, midY);
+  doc.line(cx + size, midY, cx, bottom);
+  doc.line(cx, bottom, cx - size, midY);
+  doc.line(cx - size, midY, cx, logoY);
 
-  // Inner diamond (smaller)
-  const s2 = size - 2;
-  doc.setLineWidth(0.2);
-  doc.lines(
-    [
-      [s2, s2],
-      [s2, -s2],
-      [-s2, -s2],
-      [-s2, s2],
-    ],
-    cx,
-    logoY + size,
-    [1, 1],
-    null,
-    true
-  );
+  // Inner diamond
+  const inset = 1.8;
+  doc.setLineWidth(0.25);
+  doc.line(cx, logoY + inset, cx + size - inset, midY);
+  doc.line(cx + size - inset, midY, cx, bottom - inset);
+  doc.line(cx, bottom - inset, cx - size + inset, midY);
+  doc.line(cx - size + inset, midY, cx, logoY + inset);
 
-  // C monogram
+  // C monogram — centered inside diamond (baseline ~mid)
   doc.setFont("times", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(12);
   doc.setTextColor(201, 150, 60);
-  doc.text("C", cx, logoY + size + 2, { align: "center" });
+  doc.text("C", cx, midY + 3.2, { align: "center" });
 
-  // CLARIFAI text below C
+  // Labels below the diamond (no overlap)
+  const labelY = bottom + 4.5;
   doc.setFont("times", "normal");
   doc.setFontSize(5);
   doc.setTextColor(180, 130, 50);
-  doc.setCharSpace(2);
-  doc.text("CLARIFAI", cx, logoY + size + 6, { align: "center" });
+  doc.setCharSpace(1.2);
+  doc.text("CLARIFAI", cx, labelY, { align: "center" });
   doc.setCharSpace(0);
 
-  // Two thin lines
   doc.setDrawColor(201, 150, 60);
   doc.setLineWidth(0.2);
-  doc.line(cx - 8, logoY + size + 7.5, cx + 8, logoY + size + 7.5);
-  doc.line(cx - 8, logoY + size + 8.5, cx + 8, logoY + size + 8.5);
+  doc.line(cx - 8, labelY + 1.4, cx + 8, labelY + 1.4);
+  doc.line(cx - 8, labelY + 2.2, cx + 8, labelY + 2.2);
 
-  // WITHOUT PREJUDICE tiny text
   doc.setFontSize(4);
   doc.setTextColor(180, 130, 50);
-  doc.setCharSpace(1);
-  doc.text("WITHOUT PREJUDICE", cx, logoY + size + 11, { align: "center" });
+  doc.setCharSpace(0.6);
+  doc.text("WITHOUT PREJUDICE", cx, labelY + 5, { align: "center" });
   doc.setCharSpace(0);
 
-  // Reset colors for rest of letter
   doc.setTextColor(0, 0, 0);
   doc.setDrawColor(0, 0, 0);
+  doc.setFont("times", "normal");
 
-  y = logoY + size * 2 + 20;
+  y = labelY + 12;
 
   const blockTop = y;
   doc.setFontSize(10);
