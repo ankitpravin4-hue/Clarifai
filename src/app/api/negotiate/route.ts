@@ -87,6 +87,8 @@ function parsePlainTextLetter(raw: string) {
 }
 
 export async function POST(request: Request) {
+  console.log("=== NEGOTIATE ROUTE CALLED ===");
+
   try {
     if (!GROQ_API_KEY) {
       return NextResponse.json(
@@ -102,7 +104,6 @@ export async function POST(request: Request) {
 
     const { formData, selectedClauses } = body;
 
-    console.log("=== NEGOTIATE API CALLED ===");
     console.log("Form data:", JSON.stringify(formData));
     console.log("Selected clauses count:", selectedClauses?.length);
 
@@ -207,11 +208,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(parsed);
   } catch (error) {
-    console.log("=== ERROR ===", error);
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unexpected error generating letter.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("=== NEGOTIATE ERROR ===", error);
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
