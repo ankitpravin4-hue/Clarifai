@@ -266,7 +266,7 @@ export default function Home() {
 
           {/* Preview card */}
           <div className="relative">
-            <div className="tilt-right absolute -right-3 -top-6 z-10 hidden max-w-[9rem] rounded-sm bg-highlight/70 px-3 py-2 shadow-md sm:block">
+            <div className="tilt-right absolute -right-3 -top-6 z-10 hidden max-w-[9rem] rounded-sm bg-highlight px-3 py-2 shadow-md sm:block">
               <p className="font-hand text-lg leading-tight text-foreground/80">
                 read this part twice!
               </p>
