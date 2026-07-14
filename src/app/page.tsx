@@ -236,12 +236,29 @@ export default function Home() {
                 viewBox="0 0 120 90"
                 fill="none"
                 aria-hidden
-                className="h-7 w-7 shrink-0 -scale-x-100 text-ink/70"
+                className="h-7 w-7 shrink-0 -scale-x-100"
+                style={{ color: "var(--ink)" }}
               >
-                <path d="M8 8C40 20 78 34 96 66" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                <path d="M96 66L74 60M96 66L88 44" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M8 8C40 20 78 34 96 66"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  opacity="0.8"
+                />
+                <path
+                  d="M96 66L74 60M96 66L88 44"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  opacity="0.8"
+                />
               </svg>
-              <p className="font-hand text-xl leading-none text-ink/80">
+              <p
+                className="font-hand text-xl leading-none"
+                style={{ color: "var(--ink)" }}
+              >
                 sign in to analyze your first contract free
               </p>
             </div>
@@ -313,13 +330,14 @@ export default function Home() {
                     fill="none"
                     preserveAspectRatio="none"
                     aria-hidden
-                    className="pointer-events-none absolute -inset-x-2 -inset-y-3 h-[calc(100%+1.5rem)] w-[calc(100%+1rem)] text-ink/70"
+                    className="pointer-events-none absolute -inset-x-2 -inset-y-3 h-[calc(100%+1.5rem)] w-[calc(100%+1rem)]"
                   >
                     <path
                       d="M138 8C86 2 40 10 20 34C2 56 14 84 62 96C112 108 176 104 200 78C220 56 210 26 168 12C142 4 108 3 84 9"
-                      stroke="currentColor"
+                      stroke="var(--ink)"
                       strokeWidth="3"
                       strokeLinecap="round"
+                      opacity="0.75"
                     />
                   </svg>
                   <span className="mt-0.5 h-full w-1 shrink-0 self-stretch rounded-full bg-risk-high" />
