@@ -242,7 +242,7 @@ export default function Home() {
                 <path d="M96 66L74 60M96 66L88 44" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <p className="font-hand text-xl leading-none text-ink/80">
-                no card, no sign-up — just paste &amp; go
+                sign in to analyze your first contract free
               </p>
             </div>
           </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export function AuthControls({ dark = false }: { dark?: boolean }) {
@@ -16,21 +15,9 @@ export function AuthControls({ dark = false }: { dark?: boolean }) {
               Sign in
             </button>
           </SignInButton>
-          <Link
-            href="/analyze"
-            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-105"
-          >
-            Analyze a contract
-          </Link>
         </SignedOut>
         <SignedIn>
           <UserButton afterSignOutUrl="/" />
-          <Link
-            href="/analyze"
-            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-105"
-          >
-            Analyze a contract
-          </Link>
         </SignedIn>
       </div>
     );
@@ -47,21 +34,9 @@ export function AuthControls({ dark = false }: { dark?: boolean }) {
             Sign in
           </button>
         </SignInButton>
-        <Link
-          href="/analyze"
-          className="rounded-full bg-primary px-4.5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:brightness-105 active:translate-y-px"
-        >
-          Analyze a contract
-        </Link>
       </SignedOut>
       <SignedIn>
         <UserButton afterSignOutUrl="/" />
-        <Link
-          href="/analyze"
-          className="hidden rounded-full bg-primary px-4.5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:brightness-105 active:translate-y-px sm:inline-flex"
-        >
-          Analyze a contract
-        </Link>
       </SignedIn>
     </div>
   );

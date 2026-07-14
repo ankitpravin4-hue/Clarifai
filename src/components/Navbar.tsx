@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { SignedIn } from "@clerk/nextjs";
 import { AuthControls } from "@/components/AuthControls";
 import { BrandLogo } from "@/components/BrandLogo";
 
@@ -10,7 +9,6 @@ const links = [
   { href: "/analyze", label: "Analyze" },
   { href: "/compare", label: "Compare" },
   { href: "/negotiate", label: "Negotiate" },
-  { href: "/history", label: "History", signedInOnly: true },
   { href: "/faq", label: "FAQ" },
 ];
 
@@ -22,22 +20,16 @@ export function Navbar({ variant = "light" }: { variant?: "light" | "dark" }) {
     "rounded-full px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground";
 
   const renderLinks = (onNavigate?: () => void) =>
-    links.map((l) => {
-      const link = (
-        <Link
-          key={l.href}
-          href={l.href}
-          className={linkClass}
-          onClick={onNavigate}
-        >
-          {l.label}
-        </Link>
-      );
-      if (l.signedInOnly) {
-        return <SignedIn key={l.href}>{link}</SignedIn>;
-      }
-      return link;
-    });
+    links.map((l) => (
+      <Link
+        key={l.href}
+        href={l.href}
+        className={linkClass}
+        onClick={onNavigate}
+      >
+        {l.label}
+      </Link>
+    ));
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-md">
