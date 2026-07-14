@@ -308,14 +308,28 @@ export default function Home() {
 
               <div className="mt-4 space-y-3">
                 <div className="relative flex items-start gap-3 rounded-xl border border-border bg-background p-4">
+                  <svg
+                    viewBox="0 0 220 110"
+                    fill="none"
+                    preserveAspectRatio="none"
+                    aria-hidden
+                    className="pointer-events-none absolute -inset-x-2 -inset-y-3 h-[calc(100%+1.5rem)] w-[calc(100%+1rem)] text-ink/70"
+                  >
+                    <path
+                      d="M138 8C86 2 40 10 20 34C2 56 14 84 62 96C112 108 176 104 200 78C220 56 210 26 168 12C142 4 108 3 84 9"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                   <span className="mt-0.5 h-full w-1 shrink-0 self-stretch rounded-full bg-risk-high" />
                   <div className="flex-1">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2">
                       <p className="text-sm font-semibold text-foreground">
                         Unlimited Liability
                       </p>
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-risk-high px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-risk-high-foreground">
-                        <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80" />
+                        <span className="size-1.5 rounded-full bg-current opacity-80" />
                         High Risk
                       </span>
                     </div>
@@ -328,12 +342,12 @@ export default function Home() {
                 <div className="flex items-start gap-3 rounded-xl border border-border bg-background p-4">
                   <span className="mt-0.5 h-full w-1 shrink-0 self-stretch rounded-full bg-risk-medium" />
                   <div className="flex-1">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2">
                       <p className="text-sm font-semibold text-foreground">
                         Automatic Renewal
                       </p>
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-risk-medium px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-risk-medium-foreground">
-                        <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80" />
+                        <span className="size-1.5 rounded-full bg-current opacity-80" />
                         Medium Risk
                       </span>
                     </div>

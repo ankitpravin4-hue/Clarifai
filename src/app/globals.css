@@ -5,20 +5,26 @@
 :root {
   --background: #fcfaf6;
   --foreground: #18130e;
+  --card: #ffffff;
+  --card-foreground: #18130e;
   --primary: #cb9b53;
   --primary-foreground: #1d140d;
   --secondary: #f2f0eb;
-  --secondary-foreground: #18130e;
+  --secondary-foreground: #241e1a;
   --muted: #f2f0eb;
   --muted-foreground: #6e6862;
-  --card: #ffffff;
-  --card-foreground: #18130e;
+  --accent: #f7efe1;
+  --accent-foreground: #241e1a;
   --border: #e1ddd8;
+  --ring: #cb9b53;
   --highlight: #f9dd73;
   --ink: #c92f33;
   --risk-high: #d73431;
+  --risk-high-foreground: #fff6f5;
   --risk-medium: #e49e38;
+  --risk-medium-foreground: #3b2300;
   --risk-low: #439458;
+  --risk-low-foreground: #f0fdf1;
 }
 
 body {
