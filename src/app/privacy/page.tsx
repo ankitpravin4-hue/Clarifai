@@ -8,22 +8,22 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-navy">
-      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
-        <p className="text-xs font-bold uppercase tracking-wide text-accent">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto w-full max-w-3xl px-5 py-14 md:py-20">
+        <p className="text-sm font-semibold uppercase tracking-wider text-primary">
           Legal
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="mt-3 text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
           Privacy
         </h1>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-muted-foreground">
           Last updated: 13 July 2026 ·{" "}
-          <Link href="/terms" className="font-medium text-accent hover:underline">
+          <Link href="/terms" className="font-medium text-primary hover:underline">
             Terms
           </Link>
         </p>
 
-        <div className="mt-10 space-y-6 rounded-card border border-line bg-white p-6 shadow-card sm:p-8 text-sm leading-relaxed text-slate-600">
+        <div className="mt-10 space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8 text-sm leading-relaxed text-muted-foreground">
           <p>
             Clarifai uses authentication providers to manage sign-in. When you
             are signed in, analysis summaries (scores, clause insights, and
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
           </p>
           <p>
             For product questions, see our{" "}
-            <Link href="/faq" className="font-medium text-accent hover:underline">
+            <Link href="/faq" className="font-medium text-primary hover:underline">
               FAQ
             </Link>
             .

@@ -8,15 +8,15 @@ export const metadata: Metadata = {
 
 export default function FaqPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-navy">
-      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
-        <p className="text-xs font-bold uppercase tracking-wide text-accent">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto w-full max-w-3xl px-5 py-14 md:py-20">
+        <span className="text-sm font-semibold uppercase tracking-wider text-primary">
           Help
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+        </span>
+        <h1 className="mt-3 text-pretty text-3xl font-semibold tracking-tight sm:text-4xl">
           Frequently asked questions
         </h1>
-        <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
+        <p className="mt-4 text-pretty text-lg leading-relaxed text-muted-foreground">
           Quick answers about what Clarifai is — and what it is not.
         </p>
         <div className="mt-10">

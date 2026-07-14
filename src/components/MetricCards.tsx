@@ -26,17 +26,19 @@ const items = (a: ContractAnalysis) =>
 
 export function MetricCards({ analysis }: { analysis: ContractAnalysis }) {
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {items(analysis).map((m) => (
         <div
           key={m.label}
-          className="rounded-card border border-line bg-white p-4 shadow-card"
+          className="rounded-2xl border border-border bg-card p-4 shadow-sm"
         >
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             {m.label}
           </p>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-navy">{m.value}</p>
-          <p className="mt-1 text-xs text-slate-500">{m.hint}</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+            {m.value}
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">{m.hint}</p>
         </div>
       ))}
     </div>

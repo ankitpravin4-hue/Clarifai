@@ -79,12 +79,21 @@ export default function AnalyzePage() {
         showToast("Compare mode needs a second PDF.", "error");
         return;
       }
-      if (primary.name.toLowerCase().endsWith(".docx") || secondary.name.toLowerCase().endsWith(".docx")) {
-        showToast("DOCX is preview-only — convert to PDF before compare.", "error");
+      if (
+        primary.name.toLowerCase().endsWith(".docx") ||
+        secondary.name.toLowerCase().endsWith(".docx")
+      ) {
+        showToast(
+          "DOCX is preview-only — convert to PDF before compare.",
+          "error"
+        );
         return;
       }
     } else if (primary.name.toLowerCase().endsWith(".docx")) {
-      showToast("DOCX is preview-only — convert to PDF before analysis.", "error");
+      showToast(
+        "DOCX is preview-only — convert to PDF before analysis.",
+        "error"
+      );
       return;
     }
 
@@ -148,39 +157,27 @@ export default function AnalyzePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-navy">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-accent">
-              Clarifai workspace
-            </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Contract analyzer
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
-              Upload a PDF, let AI map the risk landscape, and export a polished
-              report your team can rally around.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={loadSample}
-              disabled={loading}
-              className="inline-flex items-center justify-center rounded-lg border border-line bg-white px-4 py-2 text-sm font-semibold text-navy shadow-sm transition hover:border-accent/40 disabled:opacity-50"
-            >
-              Try sample contract
-            </button>
-          </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto w-full max-w-4xl px-5 py-14 md:py-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+            Contract analysis
+          </span>
+          <h1 className="mt-3 text-pretty text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Get your risk report in seconds
+          </h1>
+          <p className="mt-4 text-pretty text-lg leading-relaxed text-muted-foreground">
+            Upload a contract and Clarifai will score the risk, flag every
+            concerning clause, and explain it in plain English.
+          </p>
         </div>
 
-        <div className="mt-10 rounded-card border border-line bg-white p-5 shadow-card sm:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-navy">Compare mode</p>
-              <p className="text-xs text-slate-500">
-                Flip on to upload two PDFs and jump into the dedicated compare view.
+        <div className="mx-auto mt-10 max-w-2xl">
+          <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm">
+            <div className="text-left">
+              <p className="text-sm font-medium text-foreground">Compare mode</p>
+              <p className="text-xs text-muted-foreground">
+                Upload two PDFs and jump into the side-by-side view.
               </p>
             </div>
             <button
@@ -191,99 +188,126 @@ export default function AnalyzePage() {
                 setCompareMode((v) => !v);
                 setAnalysis(null);
               }}
-              className={`relative inline-flex h-9 w-16 items-center rounded-full border transition ${
-                compareMode
-                  ? "border-accent/40 bg-accent/10"
-                  : "border-line bg-slate-100"
+              className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition ${
+                compareMode ? "bg-primary" : "bg-border"
               }`}
             >
               <span
-                className={`absolute left-1 top-1 h-7 w-7 rounded-full bg-white shadow transition ${
-                  compareMode ? "translate-x-7" : ""
+                className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-card shadow transition ${
+                  compareMode ? "translate-x-6" : ""
                 }`}
               />
             </button>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <UploadZone
-              label={compareMode ? "Primary contract (PDF)" : "Contract PDF"}
-              file={primary}
-              onFile={setPrimary}
-              onError={(m) => showToast(m, "error")}
-              disabled={loading}
-            />
-            {compareMode ? (
+          {compareMode ? (
+            <div className="grid gap-4 sm:grid-cols-2">
               <UploadZone
-                label="Secondary contract (PDF)"
+                label="Contract A"
+                file={primary}
+                onFile={setPrimary}
+                onError={(m) => showToast(m, "error")}
+                disabled={loading}
+                secondaryLabel="Drop PDF or click to browse"
+              />
+              <UploadZone
+                label="Contract B"
                 file={secondary}
                 onFile={setSecondary}
                 onError={(m) => showToast(m, "error")}
                 disabled={loading}
+                secondaryLabel="Drop PDF or click to browse"
               />
-            ) : (
-              <div className="rounded-card border border-dashed border-slate-200 bg-slate-50/80 p-6 text-sm text-slate-600">
-                <p className="font-semibold text-navy">Why Clarifai?</p>
-                <ul className="mt-3 space-y-2 text-sm leading-relaxed">
-                  <li>• Clause-level quotes keep provenance obvious.</li>
-                  <li>• ELI18 mode helps you brief execs in seconds.</li>
-                  <li>• Compare mode aligns redlines before countersign.</li>
-                </ul>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <UploadZone
+              label="Upload your contract"
+              file={primary}
+              onFile={setPrimary}
+              onError={(m) => showToast(m, "error")}
+              disabled={loading}
+              size="hero"
+            />
+          )}
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-slate-500">
-              Supports PDF files up to 20MB · Your documents are never stored
+          {!compareMode && (
+            <p className="mt-6 text-center text-sm text-muted-foreground">
+              Don&apos;t have a file handy?{" "}
+              <button
+                type="button"
+                onClick={loadSample}
+                disabled={loading}
+                className="font-semibold text-primary underline-offset-4 hover:underline disabled:opacity-70"
+              >
+                Try the sample contract
+              </button>
             </p>
+          )}
+
+          <div className="mt-6 flex justify-center">
             <button
               type="button"
               onClick={runAnalyze}
-              disabled={loading}
-              className="inline-flex items-center justify-center rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={loading || !primary || (compareMode && !secondary)}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:brightness-105 active:translate-y-px disabled:opacity-50"
             >
               {loading
                 ? "Working…"
                 : compareMode
                   ? "Compare contracts"
                   : "Analyze contract"}
+              {!loading && (
+                <svg
+                  viewBox="0 0 24 24"
+                  className="size-4"
+                  fill="none"
+                  aria-hidden
+                >
+                  <path
+                    d="M5 12h14m-7-7 7 7-7 7"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
             </button>
           </div>
         </div>
 
         {loading && (
-          <div className="mt-10 rounded-card border border-line bg-white p-6 shadow-card sm:p-8">
+          <div className="mt-14 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
             <LoadingSkeleton />
           </div>
         )}
 
         {analysis && !loading && (
-          <div className="mt-10 space-y-8" id="lexscan-results">
+          <div className="mt-14 space-y-6" id="lexscan-results">
             <div
               ref={exportRef}
               id="lexscan-export-root"
-              className="space-y-8 rounded-card border border-line bg-white p-6 shadow-card sm:p-8"
+              className="space-y-8 rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8"
             >
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
-                    Executive readout
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Analysis complete
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-                    Results overview
+                  <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
+                    Your risk report
                   </h2>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Model risk band:{" "}
-                    <span className="font-semibold capitalize text-navy">
-                      {analysis.riskLevel}
-                    </span>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {analysis.clausesFlagged} clauses reviewed.
+                    {analysis.hiddenPenalties > 0
+                      ? ` ${analysis.hiddenPenalties} need your attention before signing.`
+                      : " Review the flagged items before signing."}
                   </p>
                 </div>
                 <ELI18Toggle value={eli18} onChange={setEli18} />
               </div>
 
-              <div className="grid gap-8 lg:grid-cols-[240px_1fr] lg:items-start">
+              <div className="grid gap-8 lg:grid-cols-[200px_1fr] lg:items-start">
                 <div className="flex justify-center lg:justify-start">
                   <RiskGauge score={analysis.riskScore} />
                 </div>
@@ -291,13 +315,10 @@ export default function AnalyzePage() {
               </div>
 
               <div className="space-y-4">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <h3 className="text-lg font-semibold text-navy">Clause insights</h3>
-                  <p className="text-xs text-slate-500">
-                    Cards mirror AI output — always verify against the source PDF.
-                  </p>
-                </div>
-                <div className="grid gap-4">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Flagged clauses
+                </h3>
+                <div className="grid gap-3">
                   {analysis.clauses.map((c, idx) => (
                     <ClauseCard key={idx} clause={c} eli18={eli18} />
                   ))}
@@ -310,7 +331,7 @@ export default function AnalyzePage() {
               />
             </div>
 
-            <div className="flex flex-col gap-3 rounded-card border border-line bg-white p-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6">
+            <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <ExportActions analysis={analysis} captureRef={exportRef} />
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <button
@@ -319,21 +340,21 @@ export default function AnalyzePage() {
                     writeAnalysisSession(analysis);
                     router.push("/negotiate");
                   }}
-                  className="inline-flex items-center justify-center rounded-lg border border-accent/30 bg-accent/5 px-4 py-2.5 text-sm font-semibold text-accent shadow-sm transition hover:bg-accent/10"
+                  className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:brightness-105"
                 >
                   Generate negotiation letter
                 </button>
                 <button
                   type="button"
                   onClick={() => setTipsOpen(true)}
-                  className="inline-flex items-center justify-center rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-semibold text-navy shadow-sm transition hover:border-accent/40"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-border bg-background px-5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-secondary"
                 >
                   Negotiation tips
                 </button>
                 <button
                   type="button"
                   onClick={() => setDeepOpen(true)}
-                  className="inline-flex items-center justify-center rounded-lg border border-line bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-border bg-foreground px-5 text-sm font-semibold text-background shadow-sm transition hover:opacity-90"
                 >
                   Deep dive
                 </button>
@@ -363,22 +384,29 @@ export default function AnalyzePage() {
         onClose={() => setDeepOpen(false)}
       >
         {analysis ? (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {analysis.clauses.map((c, idx) => (
-              <div key={idx} className="rounded-lg border border-line bg-slate-50/80 p-4">
-                <p className="text-sm font-semibold text-navy">{c.name}</p>
-                <p className="mt-2 text-xs font-bold uppercase tracking-wide text-slate-500">
+              <div
+                key={idx}
+                className="rounded-2xl border border-border bg-secondary/40 p-4"
+              >
+                <p className="text-sm font-semibold text-foreground">{c.name}</p>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Legal tone
                 </p>
-                <p className="mt-1 text-sm text-slate-700">{c.explanation}</p>
-                <p className="mt-3 text-xs font-bold uppercase tracking-wide text-slate-500">
+                <p className="mt-1 text-sm text-foreground/80">{c.explanation}</p>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   ELI18
                 </p>
-                <p className="mt-1 text-sm text-slate-700">{c.eli18Explanation}</p>
-                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <p className="mt-1 text-sm text-foreground/80">
+                  {c.eli18Explanation}
+                </p>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Quote
                 </p>
-                <p className="mt-1 text-sm italic text-slate-600">“{c.originalQuote}”</p>
+                <p className="mt-1 text-sm italic text-muted-foreground">
+                  “{c.originalQuote}”
+                </p>
               </div>
             ))}
           </div>

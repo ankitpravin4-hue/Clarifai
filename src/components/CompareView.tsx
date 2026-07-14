@@ -7,10 +7,17 @@ import { ClauseCard } from "@/components/ClauseCard";
 
 function deltaBadge(a: number, b: number) {
   const d = Math.round(a - b);
-  if (d === 0) return { label: "Tied", cls: "bg-slate-100 text-slate-700" };
+  if (d === 0)
+    return { label: "Tied", cls: "bg-secondary text-muted-foreground" };
   if (d > 0)
-    return { label: `+${d} vs B`, cls: "bg-red-50 text-risk-high ring-1 ring-red-100" };
-  return { label: `${d} vs B`, cls: "bg-emerald-50 text-risk-low ring-1 ring-emerald-100" };
+    return {
+      label: `+${d} vs B`,
+      cls: "bg-risk-high/10 text-risk-high",
+    };
+  return {
+    label: `${d} vs B`,
+    cls: "bg-risk-low/10 text-risk-low",
+  };
 }
 
 export function CompareView({
@@ -30,63 +37,68 @@ export function CompareView({
   const maxRows = Math.max(left.clauses.length, right.clauses.length);
 
   return (
-    <div className="space-y-10">
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="rounded-card border border-line bg-white p-5 shadow-card sm:p-6">
+    <div className="space-y-8">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <section className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {leftTitle}
               </p>
-              <h2 className="mt-1 text-lg font-semibold text-navy">Risk profile</h2>
+              <h2 className="mt-1 text-lg font-semibold text-foreground">
+                Risk profile
+              </h2>
             </div>
             <span
-              className={`rounded-badge px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${l.cls}`}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${l.cls}`}
             >
               {l.label}
             </span>
           </div>
-          <div className="mt-6 grid gap-6 md:grid-cols-[200px_1fr] md:items-start">
+          <div className="mt-6 grid gap-6 md:grid-cols-[180px_1fr] md:items-start">
             <RiskGauge score={left.riskScore} />
             <MetricCards analysis={left} />
           </div>
         </section>
 
-        <section className="rounded-card border border-line bg-white p-5 shadow-card sm:p-6">
+        <section className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {rightTitle}
               </p>
-              <h2 className="mt-1 text-lg font-semibold text-navy">Risk profile</h2>
+              <h2 className="mt-1 text-lg font-semibold text-foreground">
+                Risk profile
+              </h2>
             </div>
             <span
-              className={`rounded-badge px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${r.cls}`}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${r.cls}`}
             >
               {r.label}
             </span>
           </div>
-          <div className="mt-6 grid gap-6 md:grid-cols-[200px_1fr] md:items-start">
+          <div className="mt-6 grid gap-6 md:grid-cols-[180px_1fr] md:items-start">
             <RiskGauge score={right.riskScore} />
             <MetricCards analysis={right} />
           </div>
         </section>
       </div>
 
-      <section className="rounded-card border border-line bg-white p-5 shadow-card sm:p-6">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-navy">Clause comparison</h2>
-            <p className="text-sm text-slate-600">
-              Row alignment follows model output order — use it as a conversation starter, not a legal diff.
-            </p>
-          </div>
+      <section className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">
+            Clause comparison
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Row alignment follows model output — use it as a conversation
+            starter, not a legal diff.
+          </p>
         </div>
 
         <div className="mt-4 hidden overflow-x-auto lg:block">
           <table className="min-w-full border-separate border-spacing-y-2 text-left text-sm">
             <thead>
-              <tr className="text-xs uppercase tracking-wide text-slate-500">
+              <tr className="text-xs uppercase tracking-wide text-muted-foreground">
                 <th className="px-3 py-2 font-semibold">#</th>
                 <th className="px-3 py-2 font-semibold">{leftTitle}</th>
                 <th className="px-3 py-2 font-semibold">{rightTitle}</th>
@@ -98,9 +110,12 @@ export function CompareView({
                 const lc = left.clauses[idx];
                 const rc = right.clauses[idx];
                 const score = (c?: (typeof left.clauses)[number]) =>
-                  c?.riskLevel === "high" ? 3 : c?.riskLevel === "medium" ? 2 : 1;
-                const dl =
-                  !lc || !rc ? 0 : score(lc) - score(rc);
+                  c?.riskLevel === "high"
+                    ? 3
+                    : c?.riskLevel === "medium"
+                      ? 2
+                      : 1;
+                const dl = !lc || !rc ? 0 : score(lc) - score(rc);
                 const delta =
                   !lc || !rc
                     ? "—"
@@ -112,36 +127,40 @@ export function CompareView({
 
                 return (
                   <tr key={idx} className="align-top">
-                    <td className="rounded-l-lg border-y border-l border-line bg-slate-50 px-3 py-3 text-xs font-semibold text-slate-500">
+                    <td className="rounded-l-xl border-y border-l border-border bg-secondary/50 px-3 py-3 text-xs font-semibold text-muted-foreground">
                       {idx + 1}
                     </td>
-                    <td className="border-y border-line bg-white px-3 py-3">
+                    <td className="border-y border-border bg-card px-3 py-3">
                       {lc ? (
                         <div className="space-y-1">
-                          <p className="font-semibold text-navy">{lc.name}</p>
-                          <p className="text-xs text-slate-600">
+                          <p className="font-semibold text-foreground">
+                            {lc.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
                             {lc.riskLevel} · {lc.explanation.slice(0, 140)}
                             {lc.explanation.length > 140 ? "…" : ""}
                           </p>
                         </div>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-foreground">—</span>
                       )}
                     </td>
-                    <td className="border-y border-line bg-white px-3 py-3">
+                    <td className="border-y border-border bg-card px-3 py-3">
                       {rc ? (
                         <div className="space-y-1">
-                          <p className="font-semibold text-navy">{rc.name}</p>
-                          <p className="text-xs text-slate-600">
+                          <p className="font-semibold text-foreground">
+                            {rc.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
                             {rc.riskLevel} · {rc.explanation.slice(0, 140)}
                             {rc.explanation.length > 140 ? "…" : ""}
                           </p>
                         </div>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-foreground">—</span>
                       )}
                     </td>
-                    <td className="rounded-r-lg border-y border-r border-line bg-slate-50 px-3 py-3 text-xs font-semibold text-slate-700">
+                    <td className="rounded-r-xl border-y border-r border-border bg-secondary/50 px-3 py-3 text-xs font-semibold text-foreground">
                       {delta}
                     </td>
                   </tr>
@@ -151,37 +170,41 @@ export function CompareView({
           </table>
         </div>
 
-        <div className="mt-4 space-y-4 lg:hidden">
+        <div className="mt-4 space-y-3 lg:hidden">
           {Array.from({ length: maxRows }).map((_, idx) => {
             const lc = left.clauses[idx];
             const rc = right.clauses[idx];
             return (
               <div
                 key={idx}
-                className="space-y-3 rounded-lg border border-line bg-slate-50/80 p-4"
+                className="space-y-3 rounded-2xl border border-border bg-secondary/40 p-4"
               >
-                <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Clause {idx + 1}
                 </p>
                 <div>
-                  <p className="text-xs font-semibold text-slate-500">{leftTitle}</p>
-                  <p className="mt-1 text-sm font-semibold text-navy">
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    {leftTitle}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-foreground">
                     {lc?.name ?? "—"}
                   </p>
                   {lc && (
-                    <p className="mt-1 text-xs text-slate-600">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {lc.riskLevel} · {lc.explanation.slice(0, 120)}
                       {lc.explanation.length > 120 ? "…" : ""}
                     </p>
                   )}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-slate-500">{rightTitle}</p>
-                  <p className="mt-1 text-sm font-semibold text-navy">
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    {rightTitle}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-foreground">
                     {rc?.name ?? "—"}
                   </p>
                   {rc && (
-                    <p className="mt-1 text-xs text-slate-600">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {rc.riskLevel} · {rc.explanation.slice(0, 120)}
                       {rc.explanation.length > 120 ? "…" : ""}
                     </p>
@@ -194,16 +217,16 @@ export function CompareView({
       </section>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
             {leftTitle} · clauses
           </h3>
           {left.clauses.map((c, i) => (
             <ClauseCard key={`l-${i}`} clause={c} eli18={false} />
           ))}
         </div>
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
             {rightTitle} · clauses
           </h3>
           {right.clauses.map((c, i) => (

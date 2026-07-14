@@ -20,17 +20,17 @@ export type StoredAnalysis = {
 };
 
 function riskScoreColor(score: number) {
-  if (score > 70) return "text-red-600";
-  if (score >= 40) return "text-amber-600";
-  return "text-emerald-600";
+  if (score > 70) return "text-risk-high";
+  if (score >= 40) return "text-risk-medium";
+  return "text-risk-low";
 }
 
 function riskLevelBadge(level: string | null) {
   const normalized = (level || "medium").toLowerCase() as RiskLevel;
   const styles: Record<RiskLevel, string> = {
-    high: "border-red-200 bg-red-50 text-red-800",
-    medium: "border-amber-200 bg-amber-50 text-amber-900",
-    low: "border-emerald-200 bg-emerald-50 text-emerald-900",
+    high: "bg-risk-high/10 text-risk-high",
+    medium: "bg-risk-medium/10 text-risk-medium",
+    low: "bg-risk-low/10 text-risk-low",
   };
   return styles[normalized] ?? styles.medium;
 }
@@ -66,14 +66,35 @@ export function HistoryList({ analyses }: { analyses: StoredAnalysis[] }) {
 
   if (analyses.length === 0) {
     return (
-      <div className="rounded-card border border-dashed border-line bg-white p-12 text-center shadow-card">
-        <p className="text-lg font-semibold text-navy">
-          No analyses yet — upload your first contract
+      <div className="rounded-3xl border border-dashed border-border bg-card p-12 text-center shadow-sm">
+        <span className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <svg viewBox="0 0 24 24" className="size-7" fill="none" aria-hidden>
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M14 2v6h6M16 13H8M16 17H8M10 9H8"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        <p className="mt-5 text-xl font-semibold text-foreground">
+          No analyses yet
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Upload your first contract to start building your history.
         </p>
         <button
           type="button"
           onClick={() => router.push("/analyze")}
-          className="mt-6 inline-flex items-center justify-center rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent/90"
+          className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:brightness-105"
         >
           Analyze a contract
         </button>
@@ -82,38 +103,38 @@ export function HistoryList({ analyses }: { analyses: StoredAnalysis[] }) {
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-3">
       {analyses.map((row) => {
         const score = row.risk_score ?? 0;
         return (
           <article
             key={row.id}
-            className="rounded-card border border-line bg-white p-5 shadow-card transition hover:border-accent/30 sm:p-6"
+            className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-primary/40 sm:p-6"
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0 flex-1 space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="truncate text-lg font-semibold text-navy">
+                  <h2 className="truncate text-lg font-semibold text-foreground">
                     {row.file_name || "Untitled contract"}
                   </h2>
                   <span
-                    className={`inline-flex rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${riskLevelBadge(
+                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${riskLevelBadge(
                       row.risk_level
                     )}`}
                   >
                     {row.risk_level || "medium"} risk
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-600">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
                   <span>
                     Risk score:{" "}
-                    <span className={`font-bold ${riskScoreColor(score)}`}>
+                    <span className={`font-semibold ${riskScoreColor(score)}`}>
                       {score}
                     </span>
                   </span>
                   <span>
                     Clauses flagged:{" "}
-                    <span className="font-semibold text-navy">
+                    <span className="font-semibold text-foreground">
                       {row.clauses_flagged ?? 0}
                     </span>
                   </span>
@@ -126,7 +147,7 @@ export function HistoryList({ analyses }: { analyses: StoredAnalysis[] }) {
                   writeAnalysisSession(toContractAnalysis(row));
                   router.push("/analyze?view=history");
                 }}
-                className="inline-flex w-full shrink-0 items-center justify-center rounded-lg border border-accent/30 bg-accent/5 px-4 py-2.5 text-sm font-semibold text-accent shadow-sm transition hover:bg-accent/10 sm:w-auto"
+                className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-full border border-border bg-background px-5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-secondary sm:w-auto"
               >
                 View full analysis
               </button>

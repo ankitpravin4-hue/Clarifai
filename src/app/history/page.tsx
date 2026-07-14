@@ -22,18 +22,18 @@ export default async function HistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-navy">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-accent">
-            Clarifai workspace
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto w-full max-w-4xl px-5 py-14 md:py-20">
+        <div className="max-w-2xl">
+          <span className="text-sm font-semibold uppercase tracking-wider text-primary">
             Analysis history
+          </span>
+          <h1 className="mt-3 text-pretty text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Your past contracts
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
-            Every contract you analyze while signed in is saved here for quick
-            review.
+          <p className="mt-4 text-pretty text-lg leading-relaxed text-muted-foreground">
+            Every contract you analyze while signed in is saved here so you can
+            revisit any report anytime.
           </p>
         </div>
 

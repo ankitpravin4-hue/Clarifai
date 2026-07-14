@@ -7,7 +7,16 @@ export function RiskGauge({ score }: { score: number }) {
   const offset = c - (clamped / 100) * c;
 
   const stroke =
-    clamped >= 70 ? "#E24B4A" : clamped >= 40 ? "#EF9F27" : "#639922";
+    clamped >= 70 ? "#d73431" : clamped >= 40 ? "#e49e38" : "#439458";
+
+  const label =
+    clamped >= 70 ? "High Risk" : clamped >= 40 ? "Medium Risk" : "Low Risk";
+  const labelColor =
+    clamped >= 70
+      ? "text-risk-high"
+      : clamped >= 40
+        ? "text-risk-medium"
+        : "text-risk-low";
 
   return (
     <div className="flex flex-col items-center justify-center gap-3">
@@ -17,7 +26,7 @@ export function RiskGauge({ score }: { score: number }) {
             cx="60"
             cy="60"
             r={r}
-            stroke="#e2e8f0"
+            stroke="var(--border)"
             strokeWidth="10"
             fill="none"
           />
@@ -35,17 +44,15 @@ export function RiskGauge({ score }: { score: number }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold tracking-tight text-navy">
+          <span className="text-3xl font-semibold tracking-tight text-foreground">
             {Math.round(clamped)}
           </span>
-          <span className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
-            Risk score
+          <span className={`text-[11px] font-semibold ${labelColor}`}>
+            {label}
           </span>
         </div>
       </div>
-      <p className="text-center text-xs text-slate-500">
-        Higher scores highlight more potential exposure — not a legal verdict.
-      </p>
+      <p className="text-center text-xs text-muted-foreground">Overall risk score</p>
     </div>
   );
 }

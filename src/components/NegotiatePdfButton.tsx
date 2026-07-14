@@ -56,7 +56,7 @@ export function NegotiatePdfButton({
       type="button"
       onClick={handleDownload}
       disabled={busy}
-      className="rounded-lg border border-line bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex h-10 items-center justify-center rounded-full bg-foreground px-4 text-sm font-semibold text-background shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {busy ? "Preparing…" : "Download PDF"}
     </button>

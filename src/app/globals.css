@@ -3,8 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  --background: #fcfaf6;
+  --foreground: #18130e;
+  --primary: #cb9b53;
+  --primary-foreground: #1d140d;
+  --secondary: #f2f0eb;
+  --secondary-foreground: #18130e;
+  --muted: #f2f0eb;
+  --muted-foreground: #6e6862;
+  --card: #ffffff;
+  --card-foreground: #18130e;
+  --border: #e1ddd8;
+  --highlight: #f9dd73;
+  --ink: #c92f33;
+  --risk-high: #d73431;
+  --risk-medium: #e49e38;
+  --risk-low: #439458;
 }
 
 body {
@@ -17,12 +31,29 @@ body {
     text-wrap: balance;
   }
 
+  .paper-grain {
+    background-color: var(--background);
+  }
+
+  .highlight-swipe {
+    background-image: linear-gradient(
+      transparent 55%,
+      color-mix(in srgb, var(--highlight) 85%, transparent) 55%,
+      color-mix(in srgb, var(--highlight) 90%, transparent) 92%,
+      transparent 96%
+    );
+  }
+
+  .tilt-right {
+    transform: rotate(2.2deg);
+  }
+
   .animate-shimmer {
     background: linear-gradient(
       90deg,
-      #f1f5f9 0%,
-      #e2e8f0 50%,
-      #f1f5f9 100%
+      #f2f0eb 0%,
+      #e8e4dc 50%,
+      #f2f0eb 100%
     );
     background-size: 200% 100%;
     animation: shimmer 1.2s ease-in-out infinite;

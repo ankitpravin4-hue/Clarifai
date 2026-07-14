@@ -3,7 +3,8 @@
 import { useCallback, useRef, useState } from "react";
 
 const MAX_BYTES = 20 * 1024 * 1024;
-const ACCEPT = ".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+const ACCEPT =
+  ".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 type Props = {
   label: string;
@@ -11,6 +12,10 @@ type Props = {
   onFile: (file: File | null) => void;
   onError: (message: string) => void;
   disabled?: boolean;
+  /** Larger centered dropzone used on analyze upload */
+  size?: "default" | "hero";
+  description?: string;
+  secondaryLabel?: string;
 };
 
 export function UploadZone({
@@ -19,6 +24,9 @@ export function UploadZone({
   onFile,
   onError,
   disabled,
+  size = "default",
+  description,
+  secondaryLabel,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -51,21 +59,25 @@ export function UploadZone({
     [disabled, validateAndSet]
   );
 
+  const hero = size === "hero";
+
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-semibold text-navy">{label}</p>
-        {file && (
-          <button
-            type="button"
-            onClick={() => onFile(null)}
-            className="text-xs font-medium text-slate-500 hover:text-accent"
-            disabled={disabled}
-          >
-            Clear
-          </button>
-        )}
-      </div>
+    <div className="flex w-full flex-col gap-2">
+      {!hero && (
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-sm font-medium text-foreground">{label}</p>
+          {file && (
+            <button
+              type="button"
+              onClick={() => onFile(null)}
+              className="text-xs font-medium text-muted-foreground hover:text-primary"
+              disabled={disabled}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      )}
       <div
         role="button"
         tabIndex={0}
@@ -83,17 +95,21 @@ export function UploadZone({
         }}
         onDrop={onDrop}
         onClick={() => !disabled && inputRef.current?.click()}
-        className={`group relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-card border border-dashed px-4 py-8 text-center transition ${
-          dragOver
-            ? "border-accent bg-accent/5 shadow-card"
-            : "border-slate-300 bg-slate-50/60 hover:border-accent/50 hover:bg-white"
+        className={`group relative flex w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed text-center transition-colors ${
+          hero
+            ? "rounded-3xl px-6 py-14"
+            : "rounded-2xl px-6 py-10"
+        } ${
+          dragOver || file
+            ? "border-primary bg-primary/5"
+            : "border-border bg-card hover:border-primary hover:bg-primary/5"
         } ${disabled ? "pointer-events-none opacity-60" : ""}`}
       >
         <input
           ref={inputRef}
           type="file"
           accept={ACCEPT}
-          className="hidden"
+          className="sr-only"
           disabled={disabled}
           onChange={(e) => {
             const f = e.target.files?.[0];
@@ -101,38 +117,70 @@ export function UploadZone({
             e.target.value = "";
           }}
         />
-        <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-white shadow-card ring-1 ring-line">
+        <span
+          className={`flex items-center justify-center text-primary ${
+            hero
+              ? "size-16 rounded-2xl bg-primary/10"
+              : "size-12 rounded-xl bg-secondary text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+          }`}
+        >
           <svg
-            width="22"
-            height="22"
             viewBox="0 0 24 24"
             fill="none"
-            className="text-accent"
+            className={hero ? "size-8" : "size-6"}
             aria-hidden
           >
             <path
-              d="M12 16V4m0 0l4 4m-4-4L8 8M4 20h16"
+              d="M12 13v8M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M8 17l4-4 4 4"
               stroke="currentColor"
-              strokeWidth="1.8"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
-        </div>
-        <p className="text-sm font-semibold text-navy">
-          {file ? file.name : "Drag & drop your contract"}
-        </p>
-        <p className="mt-1 max-w-sm text-xs text-slate-500">
-          PDF or DOCX · max 20MB
-          {file ? (
-            <span className="mt-1 block text-slate-400">
-              {(file.size / (1024 * 1024)).toFixed(2)} MB
-            </span>
-          ) : null}
-        </p>
-        <span className="mt-4 inline-flex items-center rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition group-hover:bg-accent/90">
-          Browse files
         </span>
+        {hero ? (
+          <>
+            <h2 className="mt-5 text-xl font-semibold text-foreground">
+              {file ? file.name : label}
+            </h2>
+            <p className="mt-2 max-w-sm text-pretty leading-relaxed text-muted-foreground">
+              {file
+                ? `${(file.size / (1024 * 1024)).toFixed(2)} MB · Click to replace`
+                : description ||
+                  "Drag and drop a PDF here, or browse your files. Your document is analyzed securely and never shared."}
+            </p>
+            {file && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFile(null);
+                }}
+                className="mt-3 text-sm font-semibold text-muted-foreground underline-offset-4 hover:underline"
+              >
+                Clear file
+              </button>
+            )}
+            <button
+              type="button"
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-full border border-border bg-background px-5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-secondary"
+            >
+              Browse files
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="mt-3 font-medium text-foreground">
+              {file ? file.name : label}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {file
+                ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+                : secondaryLabel || "PDF or DOCX · max 20MB"}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

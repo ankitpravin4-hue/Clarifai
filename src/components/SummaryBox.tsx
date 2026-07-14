@@ -8,11 +8,11 @@ export function SummaryBox({
   text: string;
 }) {
   return (
-    <section className="rounded-card border border-line bg-gradient-to-br from-white to-slate-50 p-5 shadow-card sm:p-6">
-      <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500">
+    <section className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {title}
       </h2>
-      <p className="mt-3 text-base leading-relaxed text-slate-800">{text}</p>
+      <p className="mt-3 text-base leading-relaxed text-foreground">{text}</p>
     </section>
   );
 }

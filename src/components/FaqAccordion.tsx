@@ -47,7 +47,7 @@ export function FaqAccordion() {
         return (
           <div
             key={item.q}
-            className="rounded-card border border-line bg-white shadow-card"
+            className="rounded-2xl border border-border bg-card shadow-sm"
           >
             <button
               type="button"
@@ -55,18 +55,18 @@ export function FaqAccordion() {
               aria-expanded={open}
               onClick={() => setOpenIndex(open ? null : i)}
             >
-              <span className="text-sm font-semibold text-navy sm:text-base">
+              <span className="text-sm font-semibold text-foreground sm:text-base">
                 {item.q}
               </span>
               <span
-                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line text-lg font-semibold text-accent"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-border text-lg font-semibold text-primary"
                 aria-hidden
               >
                 {open ? "−" : "+"}
               </span>
             </button>
             {open && (
-              <div className="border-t border-line px-5 py-4 text-sm leading-relaxed text-slate-600">
+              <div className="border-t border-border px-5 py-4 text-sm leading-relaxed text-muted-foreground">
                 {item.a}
               </div>
             )}

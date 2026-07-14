@@ -42,22 +42,22 @@ export function Modal({
       <button
         type="button"
         aria-label="Close dialog"
-        className="absolute inset-0 bg-navy/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-foreground/40 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="pointer-events-auto relative z-[81] m-0 max-h-[85vh] w-full max-w-2xl overflow-hidden rounded-t-2xl border border-line bg-white shadow-2xl sm:rounded-2xl">
-        <div className="flex items-center justify-between border-b border-line px-5 py-4">
-          <h2 className="text-base font-semibold text-navy">{title}</h2>
+      <div className="pointer-events-auto relative z-[81] m-0 max-h-[85vh] w-full max-w-2xl overflow-hidden rounded-t-3xl border border-border bg-card shadow-2xl sm:rounded-3xl">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <h2 className="text-base font-semibold text-foreground">{title}</h2>
           <button
             type="button"
             onClick={onClose}
-            className="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-navy"
+            className="grid h-9 w-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-secondary hover:text-foreground"
             aria-label="Close"
           >
             ×
           </button>
         </div>
-        <div className="max-h-[calc(85vh-64px)] overflow-y-auto px-5 py-4 text-sm leading-relaxed text-slate-700">
+        <div className="max-h-[calc(85vh-64px)] overflow-y-auto px-5 py-4 text-sm leading-relaxed text-muted-foreground">
           {children}
         </div>
       </div>
