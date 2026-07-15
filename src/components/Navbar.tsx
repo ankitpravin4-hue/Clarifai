@@ -10,6 +10,7 @@ const links = [
   { href: "/compare", label: "Compare" },
   { href: "/negotiate", label: "Negotiate" },
   { href: "/faq", label: "FAQ" },
+  { href: "/pricing", label: "Pricing" },
 ];
 
 export function Navbar({ variant = "light" }: { variant?: "light" | "dark" }) {

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import type { ClauseItem } from "@/types/analysis";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getUserPlan } from "@/lib/subscription";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -105,6 +106,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Rate limit exceeded. Try again in a minute." },
         { status: 429 }
+      );
+    }
+
+    const plan = await getUserPlan(userId);
+    if (plan === "free") {
+      return NextResponse.json(
+        { error: "Pro plan required", upgrade: true },
+        { status: 403 }
       );
     }
 

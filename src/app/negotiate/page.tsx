@@ -3,6 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Modal } from "@/components/Modal";
 import { useToast } from "@/components/Toast";
 import type { ClauseItem, ContractAnalysis } from "@/types/analysis";
 import { isContractAnalysis } from "@/types/analysis";
@@ -122,6 +123,7 @@ export default function NegotiatePage() {
   const [clauseChecked, setClauseChecked] = useState<boolean[]>([]);
   const [letter, setLetter] = useState<NegotiationLetter | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const letterDate = useMemo(() => formatLetterDate(new Date()), []);
 
@@ -186,6 +188,13 @@ export default function NegotiatePage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        if (
+          res.status === 403 &&
+          (data as { upgrade?: boolean }).upgrade
+        ) {
+          setShowUpgradeModal(true);
+          return;
+        }
         throw new Error((data as { error?: string }).error || "Generation failed");
       }
       setLetter(data as NegotiationLetter);
@@ -571,6 +580,24 @@ export default function NegotiatePage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        open={showUpgradeModal}
+        title="Upgrade to Pro"
+        onClose={() => setShowUpgradeModal(false)}
+      >
+        <p>
+          Negotiation letters are a Pro feature. Upgrade to Pro for ₹199/month
+          to generate polished letters from your analysis.
+        </p>
+        <Link
+          href="/pricing"
+          onClick={() => setShowUpgradeModal(false)}
+          className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:brightness-105"
+        >
+          Upgrade to Pro
+        </Link>
+      </Modal>
     </div>
   );
 }

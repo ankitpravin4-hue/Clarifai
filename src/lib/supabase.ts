@@ -18,6 +18,16 @@ import { createClient } from "@supabase/supabase-js";
  *   negotiation_tips JSONB,
  *   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
  * );
+ *
+ * CREATE TABLE subscriptions (
+ *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+ *   user_id TEXT NOT NULL UNIQUE,
+ *   plan TEXT NOT NULL,
+ *   razorpay_payment_id TEXT,
+ *   razorpay_order_id TEXT,
+ *   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+ *   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+ * );
  */
 
 export const supabase = createClient(
